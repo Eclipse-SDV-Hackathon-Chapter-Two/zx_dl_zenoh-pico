@@ -1,10 +1,9 @@
-// // tbd
+
 
 #ifndef ZENOH_PICO_SYSTEM_PLATFORM_THREADX_H
 #define ZENOH_PICO_SYSTEM_PLATFORM_THREADX_H
 
 #include <tx_api.h>
-#include <tx_port.h>
 
 
 
