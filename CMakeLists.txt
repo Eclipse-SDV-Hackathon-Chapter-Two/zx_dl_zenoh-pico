@@ -42,18 +42,19 @@ configure_file(
 include(CMakePackageConfigHelpers)
 include(GNUInstallDirs)
 
-option(BUILD_SHARED_LIBS "Build shared libraries if ON, otherwise build static libraries" ON)
+option(BUILD_SHARED_LIBS "Build shared libraries if ON, otherwise build static libraries" OFF)
 option(WITH_ZEPHYR "Build for Zephyr RTOS" OFF)
 option(WITH_FREERTOS_PLUS_TCP "Build for FreeRTOS RTOS and FreeRTOS-Plus-TCP network stack" OFF)
+# option(WITH_THREADX "Build for ThreadX RTOS" ON)
 set(ZENOH_DEBUG 0 CACHE STRING "Use this to set the ZENOH_DEBUG variable")
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON CACHE INTERNAL "")
 if(CMAKE_EXPORT_COMPILE_COMMANDS)
-  set(CMAKE_CXX_STANDARD_INCLUDE_DIRECTORIES 
+  set(CMAKE_CXX_STANDARD_INCLUDE_DIRECTORIES
       ${CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES})
 endif()
 
 if(CMAKE_SYSTEM_NAME MATCHES "Windows")
-  if (BUILD_SHARED_LIBS) 
+  if (BUILD_SHARED_LIBS)
     set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
   endif()
 elseif(CMAKE_SYSTEM_NAME MATCHES "Generic")
@@ -153,7 +154,7 @@ endfunction()
 
 pico_add_compile_definition(ZENOH_C_STANDARD=${CMAKE_C_STANDARD})
 
-if (NOT CMAKE_BUILD_TYPE MATCHES "RELEASE" OR "Release") 
+if (NOT CMAKE_BUILD_TYPE MATCHES "RELEASE" OR "Release")
   # while in development, use timestamp for patch version:
   string(TIMESTAMP PROJECT_VERSION_PATCH "%Y%m%ddev")
   set(PROJECT_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}")
@@ -182,6 +183,8 @@ elseif(CMAKE_SYSTEM_NAME MATCHES "Generic")
     pico_add_compile_definition(ZENOH_ZEPHYR)
   elseif(WITH_FREERTOS_PLUS_TCP)
     pico_add_compile_definition(ZENOH_FREERTOS_PLUS_TCP)
+  # elseif(WITH_THREADX)
+  #   pico_add_compile_definition(ZENOH_THREADX)
   endif()
 else()
   message(FATAL_ERROR "zenoh-pico is not yet available on ${CMAKE_SYSTEM_NAME} platform")
